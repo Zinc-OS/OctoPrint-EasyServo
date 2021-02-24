@@ -26,7 +26,26 @@ $(function () {
         
         let isToggled
         let boolBound = false
-        
+        $("img").mousedown( function(event) {
+            var x1 = event.pageX - this.offsetLeft;
+            var y1 = event.pageY - this.offsetTop;
+           
+            
+        });
+        $("img").mouseup("click", function(event) {
+            var x2 = event.pageX - this.offsetLeft;
+            var y2 = event.pageY - this.offsetTop;
+             if (boolBound) {
+                if (self.usedLibrary === 'pigpio') {
+                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
+                        {"pin": self.plugin_settings.GPIOY(), "angle": x1-x2})
+                } else {
+                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
+                        {"pin": "TILT", "angle": "-" + y1-y2})
+                }
+            }
+            
+        });
         self.onBeforeBinding = function () {
             $("#control-easy-servo-wrapper").insertAfter("#control-jog-custom");
             self.plugin_settings = self.settingsViewModel.settings.plugins.EasyServo;
@@ -146,54 +165,6 @@ $(function () {
                 } else {
                     OctoPrint.simpleApiCommand("EasyServo", "EASYSERVOAUTOHOME",
                         {"pin": "TILT"})
-                }
-            }
-        };
-
-        self.right = function() {
-            if (boolBound) {
-                if (self.usedLibrary === 'pigpio') {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": self.plugin_settings.GPIOX(), "angle": self.plugin_settings.yRelativeAngle()})
-                } else {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": "PAN", "angle": self.plugin_settings.yRelativeAngle()})
-                }
-            }
-        };
-
-        self.left = function() {
-            if (boolBound) {
-                if (self.usedLibrary === 'pigpio') {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": self.plugin_settings.GPIOX(), "angle": "-" + self.plugin_settings.xRelativeAngle()})
-                } else {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": "PAN", "angle": "-" + self.plugin_settings.yRelativeAngle()})
-                }
-            }
-        };
-
-        self.up = function() {
-            if (boolBound) {
-                if (self.usedLibrary === 'pigpio') {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": self.plugin_settings.GPIOY(), "angle": self.plugin_settings.yRelativeAngle()})
-                } else {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": "TILT", "angle": self.plugin_settings.yRelativeAngle()})
-                }
-            }
-        };
-
-        self.down = function() {
-            if (boolBound) {
-                if (self.usedLibrary === 'pigpio') {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": self.plugin_settings.GPIOY(), "angle": "-" + self.plugin_settings.yRelativeAngle()})
-                } else {
-                    OctoPrint.simpleApiCommand("EasyServo", "EASYSERVO_REL",
-                        {"pin": "TILT", "angle": "-" + self.plugin_settings.yRelativeAngle()})
                 }
             }
         };
